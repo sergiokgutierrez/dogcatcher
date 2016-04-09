@@ -1,183 +1,173 @@
-window.onload = function() {
-    // You might want to start with a template that uses GameStates:
-    //     https://github.com/photonstorm/phaser/tree/master/resources/Project%20Templates/Basic
-    
-    // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
-    // You will need to change the fourth parameter to "new Phaser.Game()" from
-    // 'phaser-example' to 'game', which is the id of the HTML element where we
-    // want the game to go.
-    // The assets (and code) can be found at: https://github.com/photonstorm/phaser/tree/master/examples/assets
-    // You will need to change the paths you pass to "game.load.image()" or any other
-    // loading functions to reflect where you are putting the assets.
-    // All loading functions will typically all be found inside "preload()".
 
-	var game = new Phaser.Game(700, 500, Phaser.AUTO, '', { preload: preload, create: create, update: update, render : render});
+window.onload = function (){
+	var game = new Phaser.Game(800, 500, Phaser.AUTO, 'game', { preload: preload, create: create, update: update , render : render});
+function preload(){
+    game.load.image('rock', 'assets/rock.png');
+    game.load.image('lab','assets/lab.jpg');
+    game.load.image('ledge','assets/ledge3.png');
+    game.load.spritesheet('hamster','assets/hamstersprite.png', 32,32);
+}
+var rock;
+var platforms;
+var hamster1;
+var hamster2;
+var hamster3;
+var hamster4;
+var hamster5;
 
-	function preload() {
-		game.load.image('sky', 'assets/sky.png');
-		game.load.image('ground', 'assets/platform.png');
-		game.load.image('star', 'assets/star.png');
-		game.load.spritesheet('dog', 'assets/dogsprite.png', 32, 32);
-		game.load.spritesheet('dogCatcher', 'assets/dogCatcher.png', 50, 74);
-		game.load.spritesheet('bonesprite', 'assets/bone.png', 90,90);
+function create() {
+	game.physics.startSystem(Phaser.Physics.ARCADE);
+	//background
+	game.add.sprite(0,0,'lab');
+	//rock
+	game.add.sprite(game.world.width/2,game.world.height-150,'rock');
 
-
-	}
-	var platforms;
-	var player; 
-	var dogCatcher;
-	var cursors;
-	var bone;
-
-	function create() {
-		game.physics.startSystem(Phaser.Physics.CANVAS);
-		game.add.sprite(0,0,'sky');
-		platforms = game.add.group();
-		platforms.enableBody = 'true';
-		var ground = platforms.create(0, game.world.height - 64, 'ground');
-		ground.scale.setTo(2,2);
-		ground.body.immovable = true; //doesn't move anywhere
-
-		var ledge = platforms.create(400,400 ,'ground');
-
-		ledge.body.immnovable = true;
-
-		//start
-		game.add.sprite(0,0,'star');
-		//player
-		player = game.add.sprite(32, game.world.height - 150, 'dog');
-		game.physics.arcade.enable(player);
-		player.body.gravity.y = 300;
-		player.body.collideWorldBounds = true;
-		//dog animations
-		player.animations.add('right', [0,1,2,3,4,5], 10, true);
-		player.animations.add('left', [6,7,8,9,10,11], 10, true)
-
-		//dog catcher
-		dogCatcher = game.add.sprite(32, game.world.height - 250, 'dogCatcher');
-		game.physics.arcade.enable(dogCatcher);
-		dogCatcher.body.collideWorldBounds = true;
-		dogCatcher.animations.add('down',[0,1,2,3], 10, true);
-		dogCatcher.animations.add('right',[8,9,10,11], 10, true);
-		dogCatcher.animations.add('left',[7,6,5,4], 10, true);
-		dogCatcher.animations.add('up',[13,14,15], 10, true);
-
-		bone = game.add.sprite(0,50, 'bonesprite');
-		game.physics.arcade.enable(bone);
-		bone.body.collideWorldBounds = true;
-		bone.body.gravity.y = 300;
-		bone.animations.add('down', [0,1,2,3], 10, true);
-		bone.animations.add('broke', [4,5,6], 10, true);
+	//ledges
+	platforms = game.add.group();
+	platforms.enableBody = true;
 
 
-	}
-	var count = 0;
-	var stopFrame=0;
+var ground = platforms.create(0,game.world.height-5, 'ledge');	
+	ground.scale.setTo(2,1);
+	ground.body.immovable = true;
+var ledge = platforms.create(30,100,'ledge');	
+	ledge.body.immovable = true;
+	ledge = platforms.create(30, 200, 'ledge');
+	ledge.body.immovable = true;
+	ledge = platforms.create(30, 300, 'ledge');
+	ledge.body.immovable = true;
 
-	function update() {
+	//hamster1
+	hamster1 = game.add.sprite(32,32,'hamster');
+	game.physics.arcade.enable(hamster1);
+	hamster1.body.bounce.y = 0.2;
+	hamster1.body.gravity.y= 300;
+	hamster1.body.collideWorldBounds = true;
+	//hamster1 animations
+	hamster1.animations.add('down',[0,1,2],10,true);
+	hamster1.animations.add('left',[12,13,14],10,true);
+	hamster1.animations.add('right',[24,25,26],10,true);
+	hamster1.animations.add('up',[36,37,38],10,true);
 
-	    game.physics.arcade.collide(player, platforms);
-	    game.physics.arcade.collide(dogCatcher, platforms);
-	    game.physics.arcade.collide(player, dogCatcher);
-	    // game.physics.arcade.collide(player, dogCatcher, collisionHandler, null, this);
+		//hamster2
+	hamster2 = game.add.sprite(32,150,'hamster');
+	game.physics.arcade.enable(hamster2);
+	hamster2.body.bounce.y = 0.2;
+	hamster2.body.gravity.y= 300;
+	hamster2.body.collideWorldBounds = true;
+	//hamster2 animations
+	hamster2.animations.add('down',[0,1,2],10,true);
+	hamster2.animations.add('left',[12,13,14],10,true);
+	hamster2.animations.add('right',[24,25,26],10,true);
+	hamster2.animations.add('up',[36,37,38],10,true);
+
+			//hamster3
+	hamster3 = game.add.sprite(32,150,'hamster');
+	game.physics.arcade.enable(hamster3);
+	hamster3.body.bounce.y = 0.2;
+	hamster3.body.gravity.y= 300;
+	hamster3.body.collideWorldBounds = true;
+	//hamster3 animations
+	hamster3.animations.add('down',[0,1,2],10,true);
+	hamster3.animations.add('left',[12,13,14],10,true);
+	hamster3.animations.add('right',[24,25,26],10,true);
+	hamster3.animations.add('up',[36,37,38],10,true);
+	//hamster4
+	hamster4 = game.add.sprite(32,240,'hamster');
+	game.physics.arcade.enable(hamster4);
+	hamster4.body.bounce.y = 0.2;
+	hamster4.body.gravity.y= 300;
+	hamster4.body.collideWorldBounds = true;
+	//hamster4 animations
+	hamster4.animations.add('down',[0,1,2],10,true);
+	hamster4.animations.add('left',[12,13,14],10,true);
+	hamster4.animations.add('right',[24,25,26],10,true);
+	hamster4.animations.add('up',[36,37,38],10,true);
 
 
-	    cursors = game.input.keyboard.createCursorKeys();
-	    player.body.velocity.x=0;
-	    if(cursors.left.isDown)
-	    {
-	    	player.body.velocity.x = -150;
-	    	player.animations.play('left');
-	    	stopFrame=6;
+}
+
+
+function update() {
+		//hamster 1
+	    game.physics.arcade.collide(hamster1, platforms);
+	    if(hamster1.body.x > 600){
+
+	    	hamster1.body.velocity.x = -100;
+	    	hamster1.animations.play('left');
+	    }else if (hamster1.body.x < 68){
+
+	    	hamster1.body.velocity.x = 100;
+	    	hamster1.animations.play('right');
 	    }
-	   	else if(cursors.right.isDown)
-	    {
-	    	player.body.velocity.x = 150;
-	    	player.animations.play('right');
-	    	stopFrame = 0;
-	    }
-	    else
-	    {
-	    	player.animations.stop();
-	    	player.frame = stopFrame;
-	    }
+	    //hamster 2
+	      game.physics.arcade.collide(hamster2, platforms);
+	    if(hamster2.body.x > 350){
 
-	    // jump
-	    if (cursors.up.isDown && player.body.touching.down)
-	    {
-	    	player.body.velocity.y = -360;
-	    }
+	    	hamster2.body.velocity.x = -100;
+	    	hamster2.animations.play('left');
+	    }else if (hamster2.body.x < 68){
 
-	    if(dogCatcher.body.x>500){
-
-	    dogCatcher.body.velocity.x = -150;
-	    dogCatcher.animations.play('left');
-	    count++;
-	    } else if(dogCatcher.body.x<100){
-
-	   		dogCatcher.body.velocity.x = 150;
-	   		dogCatcher.animations.play('right');
-	    	count++;
+	    	hamster2.body.velocity.x = 100;
+	    	hamster2.animations.play('right');
 	    }
 
-	    if (count % 5 == 0){
-	    	dogCatcher.body.velocity.y = 300;
+	    //hamster3
+	      game.physics.arcade.collide(hamster3, platforms);
+	    if(hamster3.body.x > 600){
 
-	   		dogCatcher.animations.play('down');
-	    }else{
-	    	dogCatcher.body.velocity.y = -300;
-	   		// dogCatcher.animations.play('up');
+	    	hamster3.body.velocity.x = -100;
+	    	hamster3.animations.play('left');
+	    }else if (hamster3.body.x < 350){
+
+	    	hamster3.body.velocity.x = 100;
+	    	hamster3.animations.play('right');
 	    }
 
-		// if (cursors.right.isDown)
-	 //    {
-	 //        dogCatcher.body.velocity.x = 250;
-	 //    }
-	 	if(bone.body.y < 400){
-	 		bone.animations.play('down');
-	 	}else {
-	 		bone.animations.play('broke');
-	 		bone.frame = 5;
-	 	}
 
-	}
+	    //hamster4
+	    game.physics.arcade.collide(hamster4, platforms);
+	    if(hamster4.body.x > 600){
+	    	hamster4.body.velocity.x = -100;
+	    	hamster4.animations.play('left');
+	    }else if (hamster4.body.x < 68){
 
-	function render(){
-		// game.debug.text(game.time.suggestedFps, 32, 32);
-	    // game.debug.text(game.time.physicsElapsed, 32, 32);
-	    // game.debug.body(player);
-	    // game.debug.bodyInfo(player, 16, 24);
-	    game.debug.text("bone y =  "+ bone.body.y, 50, 50);
+	    	hamster4.body.velocity.x = 100;
+	    	hamster4.animations.play('right');
+	    }
+	    //------for testing new hamster----
+	    // if(cursors.left.isDown)
+	    // {
+	    // 	hamster1.body.velocity.x = -150;
+	    // 	hamster1.animations.play('left');
+	    // }
+	   	// else if(cursors.right.isDown)
+	    // {
+	    // 	hamster1.body.velocity.x = 150;
+	    // 	hamster1.animations.play('right');
+	    // }else if (cursors.up.isDown)
+	    // {
+	    // 	hamster1.animations.play('up');
 
-	    // game.debug.text("lNumber: "+lNumber, 500, 50);
+	    // }else if (cursors.down.isDown)
+	    // {
+	    // 	hamster1.animations.play('down');
 
-	    // game.debug.text("arr[number]: "+arr[lNumber], 300, 150);
+	    // }
+	    // else
+	    // {
+	    // 	hamster1.animations.stop();
+	    // 	hamster1.frame = stopFrame;
+	    // }
 
-	}
+	    // // jump
 
-	function collisionHandler(_player, _dogCatcher) {
-		_player.frame = 13;
-		gameOver();
-
-	}
-	function gameOver() 
-	{
-		player.kill();
-    	effect.kill();
-	    fx.play('over');
-	    if(score > 4){
-        	stateText.text=" CONGRATS!! \n YOU WON\n Click to restart";
-	    }else
-        stateText.text=" GAME OVER \n Click to restart";
-        stateText.visible = true;
-        game.input.onTap.addOnce(restart,this);
-
-	}
-
-	
+	    // }
+}
+function render(){
+	game.debug.text("this is x " + hamster1.body.x, 50 ,50);
+}
 
 
 
-	
-    
-};
+}
