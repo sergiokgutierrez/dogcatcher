@@ -2,7 +2,7 @@
 window.onload = function (){
 	var game = new Phaser.Game(800, 500, Phaser.AUTO, 'game', { preload: preload, create: create, update: update , render : render});
 function preload(){
-    game.load.image('rock', 'assets/rock.png');
+    game.load.image('rockS', 'assets/rock.png');
     game.load.image('lab','assets/lab.jpg');
     game.load.image('ledge','assets/ledge3.png');
     game.load.image('barS', 'assets/barsprite.png');
@@ -21,9 +21,7 @@ function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	//background
 	game.add.sprite(0,0,'lab');
-	//rock
-	game.add.sprite(game.world.width/2,game.world.height-150,'rock');
-
+	
 	//ledges
 	platforms = game.add.group();
 	platforms.enableBody = true;
@@ -121,6 +119,16 @@ var ledge = platforms.create(30,100,'ledge');
 	hamster4.animations.add('left',[12+9,13+9,14+9],10,true);
 	hamster4.animations.add('right',[24+9,25+9,26+9],10,true);
 	hamster4.animations.add('up',[36,37,38],10,true);
+	//rock
+	rock = game.add.sprite(game.world.width/2,game.world.height-150,'rockS');
+    // rock.anchor.set(0.5);
+    rock.inputEnabled = true;
+    rock.input.enableDrag(true);
+
+    // // //  Drag events
+    // rock.events.onDragStart.add(dragStart);
+    // rock.events.onDragUpdate.add(dragUpdate);
+    // rock.events.onDragStop.add(dragStop);
 
 
 }
@@ -201,6 +209,32 @@ function update() {
 	    // // jump
 
 	    // }
+}
+
+function dragStart() {
+
+    copySprite.alpha = 1;
+
+}
+
+function dragUpdate(sprite, pointer, dragX, dragY, snapPoint) {
+
+    //  As we drag the ship around inc the angle
+    angle += 0.01;
+
+    //  This just circles the copySprite around the sprite being dragged
+    copySprite.x = dragSprite.x + 220 * Math.cos(angle);
+    copySprite.y = dragSprite.y + 220 * Math.sin(angle);
+
+    //  And this points the copySprite at the current pointer
+    copySprite.rotation = game.physics.arcade.angleToPointer(copySprite);
+
+}
+
+function dragStop() {
+
+    copySprite.alpha = 0.5;
+
 }
 function render(){
 	game.debug.text("this is x " + hamster1.body.x, 50 ,50);
